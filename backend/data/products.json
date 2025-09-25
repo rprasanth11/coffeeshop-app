@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Espresso",
+    "image": "/images/espresso.jpg",
+    "price": 120,
+    "description": "Strong and bold espresso shot."
+  },
+  {
+    "name": "Cappuccino",
+    "image": "/images/cappuccino.jpg",
+    "price": 150,
+    "description": "Espresso with steamed milk and foam."
+  },
+  {
+    "name": "Latte",
+    "image": "/images/latte.jpg",
+    "price": 180,
+    "description": "Smooth espresso with steamed milk."
+  },
+  {
+    "name": "Special Offer",
+    "image": "/images/offer.jpg",
+    "price": 99,
+    "description": "Limited-time coffee offer!",
+    "offer": true
+  }
+]
