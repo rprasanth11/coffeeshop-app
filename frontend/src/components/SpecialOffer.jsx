@@ -1,62 +1,57 @@
 import React, { useEffect, useState } from "react";
-import offerData from "../data/special-offer.json";
+import offerImage from "../assets/images/offer.jpg"; // ✅ Imported image
 
 export default function SpecialOffer() {
-  const expiryDate = new Date(offerData.expiry);
-
-  const [timeLeft, setTimeLeft] = useState({});
-  const [expired, setExpired] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 3);
+
     const timer = setInterval(() => {
       const now = new Date();
-      const diff = expiryDate - now;
+      const diff = endDate - now;
 
       if (diff <= 0) {
         clearInterval(timer);
-        setExpired(true);
-      } else {
-        setTimeLeft({
-          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((diff / (1000 * 60)) % 60),
-          seconds: Math.floor((diff / 1000) % 60),
-        });
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
       }
+
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [expiryDate]);
-
-  if (expired) {
-    return null; // Hide section when expired
-  }
+  }, []);
 
   return (
-    <section className="bg-gradient-to-r from-pink-100 via-red-100 to-yellow-100 py-16 mt-12 shadow-inner">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8 px-6">
-        {/* Offer Image */}
+    <section className="bg-gradient-to-r from-orange-100 via-yellow-100 to-orange-50 py-10 px-6 text-center rounded-lg shadow-lg mt-10">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+        
+        {/* ✅ Styled Image */}
         <img
-          src={offerData.image}
+          src={offerImage}
           alt="Special Coffee Offer"
-          className="w-full md:w-1/2 rounded-2xl shadow-lg object-cover"
+          className="w-64 rounded-xl shadow-md border-4 border-white"
         />
 
-        {/* Offer Text */}
-        <div className="text-center md:text-left">
-          <h2 className="text-3xl font-bold text-red-600">{offerData.title}</h2>
-          <p className="mt-4 text-gray-700 text-lg">{offerData.description}</p>
+        <div>
+          <h2 className="text-3xl font-extrabold text-orange-700 mb-2">
+            🎉 Special Offer This Week!
+          </h2>
+          <p className="text-lg text-gray-700 mb-4">Buy 1 Coffee and Get 1 Free ☕</p>
 
-          {/* Countdown Timer */}
-          <div className="mt-4 flex justify-center md:justify-start gap-4 text-xl font-semibold text-red-700">
-            <span>{timeLeft.days ?? 0}d</span> :
-            <span>{timeLeft.hours ?? 0}h</span> :
-            <span>{timeLeft.minutes ?? 0}m</span> :
-            <span>{timeLeft.seconds ?? 0}s</span>
+          <div className="text-xl font-mono text-gray-900 mb-4 bg-yellow-200 px-4 py-2 rounded-lg shadow">
+            {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
           </div>
 
-          <button className="mt-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-medium shadow-md transition">
-            {offerData.buttonText}
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md transition">
+            Grab This Deal
           </button>
         </div>
       </div>
