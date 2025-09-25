@@ -1,32 +1,59 @@
 # syntax=docker/dockerfile:1
 
+#-------------------------------------------
+
+# Build frontend assets
+
+#-------------------------------------------
+
 FROM node:18-slim AS build
 
 LABEL org.opencontainers.image="coffeeshop frontend"
 LABEL org.opencontainers.description="react + vite coffe shop project for frontend"
 LABEL org.opencontainers.version="1.0.0"
-LABEl org.opencontainers.author="Devops Team prasanth.rathinavel.11@gmail.com"
+LABEL org.opencontainers.author="Devops Team prasanth.rathinavel.11@gmail.com"
 LABEL org.opencontainers.source="https://github.com/rprasanth11/coffeeshop-app"
 
 WORKDIR /usr/src/app
 
-# Install and build Dependency
+# Copy Dependency file first 
 
-COPY package.json packa-lock.jason* ./
+COPY package.json package-lock.json* ./
 
-RUN npm Install
+RUN npm install
+
+# Copy source code 
 
 COPY . .
 
+# Build Static files
+
 RUN npm run build
+
+#-------------------------------------------------
 
 # Production Stage
 
+#-------------------------------------------------
+
 FROM nginx:alpine AS prod
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+# Set working dir for nginx
+
+WORKDIR /usr/share/nginx/html
+
+# Remove default nginx page
+
+RUN rm -rf ./*
+
+# Copy build file from previous stage
+
+COPY --from=build /usr/src/app/dist .
 
 # Expose port
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off"]
+# Keep nginx in foreground
+
+CMD ["nginx", "-g", "daemon off;"]
